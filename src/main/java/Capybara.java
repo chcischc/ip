@@ -11,12 +11,12 @@ public class Capybara {
         System.out.println(LINE);
     }
 
-    private static ArrayList<String> list = new ArrayList<>();
+    private static ArrayList<Task> list = new ArrayList<>();
 
     private static void printList() {
         int i = 1;
-        for (String s : list) {
-            System.out.println(i + ". " + s);
+        for (Task task : list) {
+            System.out.println(i + ". " + task);
             i++;
         }
         System.out.println(LINE);
@@ -50,7 +50,27 @@ public class Capybara {
                 printList();
                 continue;
             }
-            list.add(input);
+            if (input.startsWith("mark ")) {
+                String numberPart = input.substring(5); // skip "mark "
+                int x = Integer.parseInt(numberPart);
+                Task cur = list.get(x-1);
+                cur.markAsDone();
+                System.out.println("Nice! I've marked this task as done:");
+                System.out.println("  " + cur);
+                System.out.println(LINE);
+                continue;
+            }
+            if (input.startsWith("unmark ")) {
+                String numberPart = input.substring(7); // skip "mark "
+                int x = Integer.parseInt(numberPart);
+                Task cur = list.get(x-1);
+                cur.markAsNotDone();
+                System.out.println("OK, I've marked this task as not done yet:");
+                System.out.println("  " + cur);
+                System.out.println(LINE);
+                continue;
+            }
+            list.add(new Task(input));
         }
         sc.close();
 
