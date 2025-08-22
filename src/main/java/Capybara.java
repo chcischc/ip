@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Capybara {
@@ -7,6 +8,17 @@ public class Capybara {
     private static void printMessage(String message) {
         System.out.println(LINE);
         System.out.println(message);
+        System.out.println(LINE);
+    }
+
+    private static ArrayList<String> list = new ArrayList<>();
+
+    private static void printList() {
+        int i = 1;
+        for (String s : list) {
+            System.out.println(i + ". " + s);
+            i++;
+        }
         System.out.println(LINE);
     }
 
@@ -34,6 +46,11 @@ public class Capybara {
                 break;
             }
             printMessage(input);
+            if (input.equalsIgnoreCase("list")) {
+                printList();
+                continue;
+            }
+            list.add(input);
         }
         sc.close();
 
