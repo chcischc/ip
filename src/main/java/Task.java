@@ -1,6 +1,6 @@
 
 class Task {
-    private String name;
+    private final String name;
     private boolean isDone = false;
 
     Task(String name) {
