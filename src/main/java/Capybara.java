@@ -6,9 +6,6 @@ public class Capybara {
     private static final String LINE =
             "____________________________________________________________";
 
-    private static final List<String> VALID_COMMANDS = List.of(
-            "bye", "list", "todo", "deadline", "event", "mark", "unmark", "delete"
-    );
 
     private static void printMessage(String message) {
         System.out.println(LINE);
@@ -51,37 +48,101 @@ public class Capybara {
         System.out.println(LINE);
     }
 
-    private static void handle(String input) throws CapyException {
-        String[] cmds = input.trim().split("\\s+", 2);
-        String cmd = cmds[0].toLowerCase();
+    private static void handleMarkUnmark(String input) {
+        if (!(input.startsWith("mark ") || input.startsWith("unmark "))) {
+            return;
+        }
 
-        if (!VALID_COMMANDS.contains(cmd)) {
-            throw new UnknownCommandException(cmd);
-        } else if ((input.startsWith("todo") || input.startsWith("deadline") || input.startsWith("event"))
-                && input.split(" ").length < 2) {
-            String kind = input.split(" ")[0].trim();
-            throw new EmptyDescriptionException(kind);
-        } else if (input.startsWith("deadline ")) {
-            String[] parts = input.split("/by ");
-            if (parts.length < 2 || parts[1].trim().isEmpty()) {
-                // if no "/by " or time part is blank
-                throw new EmptyTimeException("deadline");
-            } else if ((input.substring(9).split("/by "))[0].isEmpty()) {
-                throw new EmptyDescriptionException("deadline");
+        boolean isMark = input.startsWith("mark ");
+        int offset = isMark ? 5 : 7;  // "mark " = 5, "unmark " = 7
+        String numberPart = input.substring(offset).trim();
+
+        try {
+            int x = Integer.parseInt(numberPart);
+            Task cur = list.get(x - 1);
+
+            if (isMark) {
+                cur.markAsDone();
+                System.out.println("Nice! I've marked this task as done:");
+            } else {
+                cur.markAsNotDone();
+                System.out.println("OK, I've marked this task as not done yet:");
             }
-        } else if (input.startsWith("event ")) {
-            String[] parts1 = input.split("/from");
-            String[] parts2 = input.split("/to");
-            if (parts1.length < 2 || parts1[1].trim().isEmpty() ||
-                parts2.length < 2 || parts2[1].trim().isEmpty()) {
-                throw new EmptyTimeException("event");
-            } else if ((input.substring(6).split("/from "))[0].isEmpty()) {
-                throw new EmptyDescriptionException("event");
-            }
-        } else if (input.trim().equals("mark") || input.trim().equals("unmark") || input.trim().equals("delete")) {
-            throw new EmptyTaskNumberException(input.trim());
+
+            System.out.println("  " + cur);
+            System.out.println(LINE);
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("Capybara can’t find task number " + numberPart + " in the list.");
+            System.out.println(LINE);
+        } catch (NumberFormatException e) {
+            System.out.println("Capybara tilts head… '" + numberPart + "' is not a valid task number.");
+            System.out.println(LINE);
         }
     }
+
+    private static void handleDelete(String input) {
+        if (!input.startsWith("delete ")) {
+            return; // not our command
+        }
+
+        String numberPart = input.substring(7).trim();
+
+        try {
+            int x = Integer.parseInt(numberPart);
+            Task cur = list.get(x - 1);
+            list.remove(x - 1);
+
+            System.out.println("Noted. I've removed this task:");
+            System.out.println("  " + cur);
+            System.out.println("Now you have " + list.size() + " tasks in the list.");
+            System.out.println(LINE);
+
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("Capybara can’t find task number " + numberPart + " in the list.");
+            System.out.println(LINE);
+        } catch (NumberFormatException e) {
+            System.out.println("Capybara tilts head… '" + numberPart + "' is not a valid task number.");
+            System.out.println(LINE);
+        }
+    }
+
+    private static void handle(String input) throws CapyException {
+        Command cmd = Command.fromInput(input);
+
+        switch (cmd) {
+            case TODO:
+            case DEADLINE:
+            case EVENT:
+                if (input.split(" ").length < 2) {
+                    throw new EmptyDescriptionException(cmd.getKeyword());
+                }
+                if (cmd == Command.DEADLINE) {
+                    String[] parts = input.split("/by ");
+                    if (parts.length < 2 || parts[1].trim().isEmpty()) {
+                        throw new EmptyTimeException("deadline");
+                    }
+                } else if (cmd == Command.EVENT) {
+                    String[] parts1 = input.split("/from");
+                    String[] parts2 = input.split("/to");
+                    if (parts1.length < 2 || parts1[1].trim().isEmpty() ||
+                            parts2.length < 2 || parts2[1].trim().isEmpty()) {
+                        throw new EmptyTimeException("event");
+                    }
+                }
+                break;
+
+            case MARK:
+            case UNMARK:
+            case DELETE:
+                if (input.split(" ").length < 2) {
+                    throw new EmptyTaskNumberException(cmd.getKeyword());
+                }
+                break;
+
+            default:
+        }
+    }
+
 
     private static final String LOGO =
             "     _🍊_          \n"
@@ -103,68 +164,39 @@ public class Capybara {
             String input = sc.nextLine().trim();
             System.out.println(LINE);
             try {
+                Command cmd = Command.fromInput(input);
                 handle(input);
+
+                switch (cmd) {
+                    case BYE:
+                        System.out.println(" Bye. Hope to see you again soon!");
+                        System.out.println(LINE);
+                        sc.close();
+                        return;
+
+                    case LIST:
+                        printList();
+                        break;
+
+                    case MARK:
+                    case UNMARK:
+                        handleMarkUnmark(input);
+                        break;
+
+                    case TODO:
+                    case DEADLINE:
+                    case EVENT:
+                        addTask(input);
+                        break;
+
+                    case DELETE:
+                        handleDelete(input);
+                        break;
+                }
             } catch (CapyException e) {
                 System.out.println(e.getMessage());
                 System.out.println(LINE);
-                continue;
-            }
-            if (input.equalsIgnoreCase("bye")) {
-                System.out.println(" Bye. Hope to see you again soon!");
-                System.out.println(LINE);
-                break;
-            } else if (input.equalsIgnoreCase("list")) {
-                printList();
-                continue;
-            } else if (input.startsWith("mark ") || input.startsWith("unmark ")) {
-                boolean isMark = input.startsWith("mark ");
-                int offset = isMark ? 5 : 7;  // "mark " = 5 chars, "unmark " = 7 chars
-                String numberPart = input.substring(offset).trim();
-
-                try {
-                    int x = Integer.parseInt(numberPart);
-                    Task cur = list.get(x - 1);
-
-                    if (isMark) {
-                        cur.markAsDone();
-                        System.out.println("Nice! I've marked this task as done:");
-                    } else {
-                        cur.markAsNotDone();
-                        System.out.println("OK, I've marked this task as not done yet:");
-                    }
-
-                    System.out.println("  " + cur);
-                    System.out.println(LINE);
-                } catch (IndexOutOfBoundsException e) {
-                    System.out.println("Capybara can’t find task number " + numberPart + " in the list.");
-                    System.out.println(LINE);
-                } catch (NumberFormatException e) {
-                    System.out.println("Capybara tilts head… '" + numberPart + "' is not a valid task number.");
-                    System.out.println(LINE);
-                }
-            } else if (input.startsWith("todo ") || input.startsWith("deadline ") ||
-                    input.startsWith("event ")) {
-                addTask(input);
-            } else if (input.startsWith("delete ")) {
-                String numberPart = input.substring(7).trim();
-                try {
-                    int x = Integer.parseInt(numberPart);
-                    Task cur = list.get(x - 1);
-                    list.remove(x - 1);
-                    System.out.println("Noted. I've removed this task:");
-                    System.out.println("  " + cur);
-                    System.out.println("Now you have " + list.size() + " tasks in the list.");
-                    System.out.println(LINE);
-                } catch (IndexOutOfBoundsException e) {
-                    System.out.println("Capybara can’t find task number " + numberPart + " in the list.");
-                    System.out.println(LINE);
-                } catch (NumberFormatException e) {
-                    System.out.println("Capybara tilts head… '" + numberPart + "' is not a valid task number.");
-                    System.out.println(LINE);
-                }
             }
         }
-        sc.close();
-
     }
 }
