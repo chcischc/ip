@@ -39,4 +39,8 @@ class UnknownCommandException extends CapyException {
     }
 }
 
-
+class EmptyTaskNumberException extends CapyException {
+    EmptyTaskNumberException(String kind) {
+        super("OOPS!!! Capybara requires a task number to " + kind + " :-(");
+    }
+}

@@ -78,6 +78,8 @@ public class Capybara {
             } else if ((input.substring(6).split("/from "))[0].isEmpty()) {
                 throw new EmptyDescriptionException("event");
             }
+        } else if (input.trim().equals("mark") || input.trim().equals("unmark") || input.trim().equals("delete")) {
+            throw new EmptyTaskNumberException(input.trim());
         }
     }
 
@@ -143,6 +145,23 @@ public class Capybara {
             } else if (input.startsWith("todo ") || input.startsWith("deadline ") ||
                     input.startsWith("event ")) {
                 addTask(input);
+            } else if (input.startsWith("delete ")) {
+                String numberPart = input.substring(7).trim();
+                try {
+                    int x = Integer.parseInt(numberPart);
+                    Task cur = list.get(x - 1);
+                    list.remove(x - 1);
+                    System.out.println("Noted. I've removed this task:");
+                    System.out.println("  " + cur);
+                    System.out.println("Now you have " + list.size() + " tasks in the list.");
+                    System.out.println(LINE);
+                } catch (IndexOutOfBoundsException e) {
+                    System.out.println("Capybara can’t find task number " + numberPart + " in the list.");
+                    System.out.println(LINE);
+                } catch (NumberFormatException e) {
+                    System.out.println("Capybara tilts head… '" + numberPart + "' is not a valid task number.");
+                    System.out.println(LINE);
+                }
             }
         }
         sc.close();
