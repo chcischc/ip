@@ -14,6 +14,11 @@ class Task {
         isDone = false;
     }
 
+    public String toFileString() {
+        String isDoneMark = (isDone ? "1" : "0");
+        return " | " + isDoneMark + " | " + name;
+    }
+
     @Override
     public String toString() {
         return (isDone ? "[X] " + name : "[ ] " + name);
