@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -14,6 +15,7 @@ public class Capybara {
     }
 
     private static ArrayList<Task> list = new ArrayList<>();
+    private static Storage storage = new Storage("./Data/taskStorage.txt");
 
     private static void printList() {
         System.out.println("Here are the tasks in your list:");
@@ -71,11 +73,15 @@ public class Capybara {
 
             System.out.println("  " + cur);
             System.out.println(LINE);
+            storage.save(list);
         } catch (IndexOutOfBoundsException e) {
             System.out.println("Capybara can’t find task number " + numberPart + " in the list.");
             System.out.println(LINE);
         } catch (NumberFormatException e) {
             System.out.println("Capybara tilts head… '" + numberPart + "' is not a valid task number.");
+            System.out.println(LINE);
+        } catch (IOException e) {
+            System.out.println("Capybara slipped… couldn’t save tasks to disk.");
             System.out.println(LINE);
         }
     }
@@ -96,12 +102,16 @@ public class Capybara {
             System.out.println("  " + cur);
             System.out.println("Now you have " + list.size() + " tasks in the list.");
             System.out.println(LINE);
+            storage.save(list);
 
         } catch (IndexOutOfBoundsException e) {
             System.out.println("Capybara can’t find task number " + numberPart + " in the list.");
             System.out.println(LINE);
         } catch (NumberFormatException e) {
             System.out.println("Capybara tilts head… '" + numberPart + "' is not a valid task number.");
+            System.out.println(LINE);
+        } catch (IOException e) {
+            System.out.println("Capybara slipped… couldn’t save tasks to disk.");
             System.out.println(LINE);
         }
     }
@@ -159,6 +169,13 @@ public class Capybara {
         System.out.println(" What can I do for you... Zzzzz");
         System.out.println(LINE);
 
+        try {
+            list = storage.load();
+        } catch (IOException e) {
+            System.out.println("Capybara squeaks… couldn’t load tasks from disk. Starting fresh.");
+            System.out.println(LINE);
+        }
+
         Scanner sc = new Scanner(System.in);
         while (true) {
             String input = sc.nextLine().trim();
@@ -187,6 +204,12 @@ public class Capybara {
                     case DEADLINE:
                     case EVENT:
                         addTask(input);
+                        try {
+                            storage.save(list);
+                        } catch (IOException e) {
+                            System.out.println("Capybara slipped… couldn’t save tasks to disk.");
+                            System.out.println(LINE);
+                        }
                         break;
 
                     case DELETE:
