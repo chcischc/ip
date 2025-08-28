@@ -1,4 +1,6 @@
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -28,20 +30,63 @@ public class Capybara {
     }
 
     private static void addTask(String input) {
+        java.time.format.DateTimeFormatter DATE_FMT =
+                java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;                // yyyy-MM-dd
+        java.time.format.DateTimeFormatter DATETIME_FMT =
+                java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"); // yyyy-MM-dd 18:00
+
         Task task = null;
         if (input.startsWith("todo ")) {
             task = new ToDo(input.substring(5));
         } else if (input.startsWith("deadline ")) {
             String[] parts = input.substring(9).split("/");
             String name = parts[0].trim();
-            String time = parts[1].trim().substring(3);
-            task = new Deadline(name, time);
+            String raw = parts[1].trim().substring(3);
+            LocalDateTime by;
+            try {
+                // Try full date-time first
+                by = LocalDateTime.parse(raw, DATETIME_FMT);
+            } catch (java.time.format.DateTimeParseException e1) {
+                try {
+                    // Fallback: date-only → midnight
+                    by = LocalDate.parse(raw, DATE_FMT).atStartOfDay();
+                } catch (java.time.format.DateTimeParseException e2) {
+                    System.out.println("Capybara can’t read that date 🐹🍊. Try 'yyyy-MM-dd' or 'yyyy-MM-dd HH:mm'.");
+                    System.out.println(LINE);
+                    return;
+                }
+            }
+            task = new Deadline(name, by);
         } else if (input.startsWith("event ")) {
             String[] parts = input.substring(6).split("/");
             String name = parts[0].trim();
-            String startTime = parts[1].trim().substring(5);
-            String endTime = parts[2].trim().substring(3);
-            task = new Event(name, startTime, endTime);
+            String fromRaw = parts[1].trim().substring(5);
+            String toRaw = parts[2].trim().substring(3);
+            LocalDateTime from, to;
+            try {
+                from = LocalDateTime.parse(fromRaw, DATETIME_FMT);
+            } catch (java.time.format.DateTimeParseException e1) {
+                try {
+                    from = LocalDate.parse(fromRaw, DATE_FMT).atStartOfDay();
+                } catch (java.time.format.DateTimeParseException e2) {
+                    System.out.println("Capybara can’t read the /from time. Try 'yyyy-MM-dd' or 'yyyy-MM-dd HH:mm'.");
+                    System.out.println(LINE);
+                    return;
+                }
+            }
+
+            try {
+                to = LocalDateTime.parse(toRaw, DATETIME_FMT);
+            } catch (java.time.format.DateTimeParseException e1) {
+                try {
+                    to = LocalDate.parse(toRaw, DATE_FMT).atStartOfDay();
+                } catch (java.time.format.DateTimeParseException e2) {
+                    System.out.println("Capybara can’t read the /to time. Try 'yyyy-MM-dd' or 'yyyy-MM-dd HH:mm'.");
+                    System.out.println(LINE);
+                    return;
+                }
+            }
+            task = new Event(name, from, to);
         }
         list.add(task);
         System.out.println("Got it. I've added this task:");

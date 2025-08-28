@@ -1,5 +1,8 @@
 import java.io.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+
 
 public class Storage {
     private final String filePath;
@@ -39,6 +42,11 @@ public class Storage {
      * @throws IOException if an I/O error occurs while creating or reading the file
      */
     public ArrayList<Task> load() throws IOException {
+        java.time.format.DateTimeFormatter DATE_FMT =
+                java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;                // yyyy-MM-dd
+        java.time.format.DateTimeFormatter DATETIME_FMT =
+                java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"); // yyyy-MM-dd 18:00
+
         ArrayList<Task> tasks = new ArrayList<>();
         File file = new File(filePath);
         if (!file.exists()) {
@@ -50,6 +58,9 @@ public class Storage {
         String line;
         while ((line = br.readLine()) != null) {
             line = line.trim();
+            if (line.isEmpty()) {
+                continue;
+            }
             String[] parts = line.split(" \\| ");
             String type = parts[0];
             Boolean isDone = (Integer.parseInt(parts[1]) == 1) ? true : false;
@@ -64,14 +75,52 @@ public class Storage {
                     tasks.add(t);
                     break;
                 case "D":
-                    Deadline d = new Deadline(description, parts[3]);
+                    String raw = parts[3];
+                    LocalDateTime by;
+                    try {
+                        // Try full date-time first
+                        by = LocalDateTime.parse(raw, DATETIME_FMT);
+                    } catch (java.time.format.DateTimeParseException e1) {
+                        try {
+                            // Fallback: date-only → midnight
+                            by = LocalDate.parse(raw, DATE_FMT).atStartOfDay();
+                        } catch (java.time.format.DateTimeParseException e2) {
+                            System.out.println("Capybara can’t read that date 🐹🍊. Try 'yyyy-MM-dd' or 'yyyy-MM-dd HH:mm'.");
+                            return null;
+                        }
+                    }
+                    Deadline d = new Deadline(description, by);
                     if (isDone) {
                         d.markAsDone();
                     }
                     tasks.add(d);
                     break;
                 case "E":
-                    Event e = new Event(description, parts[3], parts[4]);
+                    String fromRaw = parts[3];
+                    String toRaw = parts[4];
+                    LocalDateTime from, to;
+                    try {
+                        from = LocalDateTime.parse(fromRaw, DATETIME_FMT);
+                    } catch (java.time.format.DateTimeParseException e1) {
+                        try {
+                            from = LocalDate.parse(fromRaw, DATE_FMT).atStartOfDay();
+                        } catch (java.time.format.DateTimeParseException e2) {
+                            System.out.println("Capybara can’t read the /from time. Try 'yyyy-MM-dd' or 'yyyy-MM-dd HH:mm'.");
+                            return null;
+                        }
+                    }
+
+                    try {
+                        to = LocalDateTime.parse(toRaw, DATETIME_FMT);
+                    } catch (java.time.format.DateTimeParseException e1) {
+                        try {
+                            to = LocalDate.parse(toRaw, DATE_FMT).atStartOfDay();
+                        } catch (java.time.format.DateTimeParseException e2) {
+                            System.out.println("Capybara can’t read the /to time. Try 'yyyy-MM-dd' or 'yyyy-MM-dd HH:mm'.");
+                            return null;
+                        }
+                    }
+                    Event e = new Event(description, from, to);
                     if (isDone) {
                         e.markAsDone();
                     }
