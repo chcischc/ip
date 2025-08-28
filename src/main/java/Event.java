@@ -1,20 +1,26 @@
-class Event extends Task {
-    private String startTime;
-    private String endTime;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
-    public Event(String name, String startTime, String endTime) {
+class Event extends Task {
+    private final LocalDateTime from;
+    private final LocalDateTime to;
+
+    public Event(String name, LocalDateTime from, LocalDateTime to) {
         super(name);
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.from = from;
+        this.to = to;
     }
 
     @Override
     public String toFileString() {
-        return "E" + super.toFileString() + " | " + startTime + " | " + endTime;
+        return "E | " + (isDone() ? "1" : "0") + " | " + getDescription() +
+                " | " + formatForSave(from) + " | " + formatForSave(to);
     }
+
 
     @Override
     public String toString() {
-        return "[E]" + super.toString() + " (from: " + startTime + " to: " + endTime + ")";
+        return "[E]" + super.toString() + " (from: " + formatForPrint(from) + " to: " + formatForPrint(to) + ")";
     }
 }

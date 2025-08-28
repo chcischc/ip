@@ -1,19 +1,23 @@
-class Deadline extends Task {
-    private String time;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
-    public Deadline(String name, String time) {
+public class Deadline extends Task {
+    private final LocalDateTime by;
+
+    public Deadline(String name, LocalDateTime by) {
         super(name);
-        this.time = time;
+        this.by = by;
     }
 
     @Override
     public String toFileString() {
-        return "D" + super.toFileString() + " | " + time;
+        return "D | " + (isDone() ? "1" : "0") + " | " + getDescription() + " | " + formatForSave(by);
     }
 
     @Override
     public String toString() {
-        return "[D]" + super.toString() + " (by: " + time + ")";
+        return "[D]" + super.toString() + " (by: " + formatForPrint(by) + ")";
     }
 
 }
