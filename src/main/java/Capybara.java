@@ -198,22 +198,9 @@ public class Capybara {
         }
     }
 
-
-    private static final String LOGO =
-            "     _🍊_          \n"
-            + "   (´ ᴖ `)       \n"
-            + "  (-┬- -┬-)       \n"
-            + "  (_______)       \n"
-            + "~~~~~~~~~~~~~~\n";
-
     public static void main(String[] args) {
-
-        System.out.println(LINE);
-        System.out.println(LOGO);
-        System.out.println(" Hello! I'm Capybara");
-        System.out.println(" What can I do for you... Zzzzz");
-        System.out.println(LINE);
-
+        Ui ui = new Ui();
+        ui.showWelcome();
         try {
             list = storage.load();
         } catch (IOException e) {
@@ -231,9 +218,7 @@ public class Capybara {
 
                 switch (cmd) {
                     case BYE:
-                        System.out.println(" Bye. Hope to see you again soon!");
-                        System.out.println(LINE);
-                        sc.close();
+                        ui.showGoodbye();
                         return;
 
                     case LIST:
