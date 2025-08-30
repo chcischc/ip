@@ -25,7 +25,7 @@ class EmptyTimeException extends CapyException {
             return "Splash! Your event needs both /from and /to… "
                     + "otherwise Capybara won’t know when to soak in the hot spring 🛁 "
                     + "(with an mandarin orange on its head 🍊).\n"
-                    + "Try: event picnic /from Mon 2pm /to 4pm";
+                    + "Try: event picnic /from 2025-09-01 16:00 /to 2025-09-01 18:00";
         } else {
             // safe fallback
             return "Peep! I need a time for that. Try using /by or /from … /to.";

@@ -1,30 +1,17 @@
-public enum Command {
-    BYE("bye"),
-    LIST("list"),
-    TODO("todo"),
-    DEADLINE("deadline"),
-    EVENT("event"),
-    MARK("mark"),
-    UNMARK("unmark"),
-    DELETE("delete");
+/*
+package capybara.command;
 
-    private final String keyword;
+import capybara.CapyException;
+import capybara.Storage;
+import capybara.TaskList;
+import capybara.Ui;
+*/
 
-    Command(String keyword) {
-        this.keyword = keyword;
-    }
+public abstract class Command {
+    public abstract void execute(TaskList tasks, Ui ui, Storage storage)
+            throws CapyException, java.io.IOException;
 
-    public String getKeyword() {
-        return keyword;
-    }
-
-    public static Command fromInput(String input) throws UnknownCommandException {
-        String cmd = input.trim().split("\\s+", 2)[0].toLowerCase();
-        for (Command c : values()) {
-            if (c.keyword.equals(cmd)) {
-                return c;
-            }
-        }
-        throw new UnknownCommandException(cmd);
+    public boolean isExit() {
+        return false;
     }
 }

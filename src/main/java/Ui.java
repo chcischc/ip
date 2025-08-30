@@ -11,8 +11,23 @@ public class Ui {
                     + "  (_______)       \n"
                     + "~~~~~~~~~~~~~~\n";
 
+    /** Reads one command line from user input. */
+    public String readCommand() {
+        if (sc.hasNextLine()) {
+            return sc.nextLine().trim();
+        } else {
+            return "";
+        }
+    }
+
     public void println(String msg) {
         System.out.println(msg);
+    }
+
+    public void printMessage(String msg) {
+        println(LINE);
+        println(msg);
+        println(LINE);
     }
 
     public void showWelcome() {
@@ -25,7 +40,6 @@ public class Ui {
 
     public void showGoodbye() {
         println(" Bye. Hope to see you again soon!");
-        println(LINE);
     }
 
     public void showLine() {
