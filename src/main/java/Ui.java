@@ -26,8 +26,33 @@ public class Ui {
     public void showGoodbye() {
         println(" Bye. Hope to see you again soon!");
         println(LINE);
-        sc.close();
     }
 
+    public void showLine() {
+        println(LINE);
+    }
 
+    public void showError(String msg) {
+        println("☹ OOPS!!! " + msg);
+    }
+
+    public void showAdded(Task t, int count) {
+        println("Got it. I've added this task:");
+        println("  " + t);
+        println("Now you have " + count + " tasks in the list.");
+    }
+
+    public void showRemoved(Task t, int count) {
+        println("Noted. I've removed this task:");
+        println("  " + t);
+        println("Now you have " + count + " tasks in the list.");
+    }
+
+    public void showList(String formatted) {
+        println(formatted);
+    }
+
+    public void close() {
+        sc.close();
+    }
 }

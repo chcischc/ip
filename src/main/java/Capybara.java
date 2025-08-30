@@ -219,6 +219,7 @@ public class Capybara {
                 switch (cmd) {
                     case BYE:
                         ui.showGoodbye();
+                        ui.close();
                         return;
 
                     case LIST:
