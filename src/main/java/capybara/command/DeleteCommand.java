@@ -1,11 +1,10 @@
-/*
 package capybara.command;
 
 import capybara.CapyException;
 import capybara.Storage;
+import capybara.Task;
 import capybara.TaskList;
 import capybara.Ui;
-*/
 
 public class DeleteCommand extends Command {
     private final int index0;
@@ -23,7 +22,7 @@ public class DeleteCommand extends Command {
             storage.save(tasks.asArrayList());
         } catch (IndexOutOfBoundsException oob) {
             int oneBased = index0 + 1;
-            throw new CapyException("Capybara can’t find task number " + oneBased + " in the list.");
+            throw new CapyException("capybara.Capybara can’t find task number " + oneBased + " in the list.");
         }
     }
 }

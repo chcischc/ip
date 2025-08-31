@@ -1,29 +1,23 @@
-/*
 package capybara.command;
 
 import capybara.CapyException;
 import capybara.Storage;
+import capybara.Task;
 import capybara.TaskList;
+import capybara.ToDo;
 import capybara.Ui;
-*/
 
-import java.time.LocalDateTime;
-
-public class AddEventCommand extends Command {
+public class AddToDoCommand extends Command {
     private final String desc;
-    private final LocalDateTime from;
-    private final LocalDateTime to;
 
-    public AddEventCommand(String desc, LocalDateTime from, LocalDateTime to) {
+    public AddToDoCommand(String desc) {
         this.desc = desc;
-        this.from = from;
-        this.to = to;
     }
 
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage)
             throws CapyException, java.io.IOException {
-        Task t = new Event(desc, from, to);
+        Task t = new ToDo(desc);
         tasks.add(t);
         storage.save(tasks.asArrayList());
         ui.showAdded(t, tasks.size());

@@ -1,3 +1,5 @@
+package capybara;
+
 import java.util.Scanner;
 
 public class Ui {
@@ -11,7 +13,7 @@ public class Ui {
                     + "  (_______)       \n"
                     + "~~~~~~~~~~~~~~\n";
 
-    /** Reads one command line from user input. */
+    /** Reads one capybara.command line from user input. */
     public String readCommand() {
         if (sc.hasNextLine()) {
             return sc.nextLine().trim();
@@ -33,7 +35,7 @@ public class Ui {
     public void showWelcome() {
         println(LINE);
         println(LOGO);
-        println(" Hello! I'm Capybara");
+        println(" Hello! I'm capybara.Capybara");
         println(" What can I do for you... Zzzzz");
         println(LINE);
     }

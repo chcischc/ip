@@ -1,4 +1,6 @@
-class ToDo extends Task {
+package capybara;
+
+public class ToDo extends Task {
 
     public ToDo(String name) {
         super(name);

@@ -1,8 +1,8 @@
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
+package capybara;
 
-class Event extends Task {
+import java.time.LocalDateTime;
+
+public class Event extends Task {
     private final LocalDateTime from;
     private final LocalDateTime to;
 
