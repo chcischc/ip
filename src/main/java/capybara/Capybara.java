@@ -1,3 +1,7 @@
+package capybara;
+
+import capybara.command.Command;
+
 public class Capybara {
     private final Storage storage;
     private final TaskList tasks;
@@ -11,7 +15,7 @@ public class Capybara {
         try {
             loaded = new TaskList(storage.load());
         } catch (Exception e) {
-            ui.showError("Capybara squeaks… couldn’t load tasks from disk. Starting fresh.");
+            ui.showError("capybara.Capybara squeaks… couldn’t load tasks from disk. Starting fresh.");
             loaded = new TaskList();
         }
         this.tasks = loaded;
@@ -30,7 +34,7 @@ public class Capybara {
             } catch (CapyException e) {
                 ui.showError(e.getMessage());                // prints your detailed messages
             } catch (java.io.IOException io) {
-                ui.showError("Capybara slipped… couldn’t save tasks to disk.");
+                ui.showError("capybara.Capybara slipped… couldn’t save tasks to disk.");
             } finally {
                 ui.showLine();
             }

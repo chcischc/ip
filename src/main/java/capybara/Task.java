@@ -1,8 +1,10 @@
+package capybara;
+
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-class Task {
+public class Task {
     protected static final DateTimeFormatter DATE_FMT =
             DateTimeFormatter.ofPattern("MMM d yyyy");
     protected static final DateTimeFormatter DATE_TIME_FMT =

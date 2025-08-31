@@ -1,3 +1,13 @@
+package capybara;
+
+import capybara.command.AddDeadlineCommand;
+import capybara.command.AddEventCommand;
+import capybara.command.AddToDoCommand;
+import capybara.command.ByeCommand;
+import capybara.command.Command;
+import capybara.command.DeleteCommand;
+import capybara.command.ListCommand;
+import capybara.command.MarkCommand;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -132,7 +142,7 @@ public class Parser {
             }
             return n - 1;
         } catch (NumberFormatException e) {
-            throw new CapyException("Capybara tilts head… '" + raw + "' is not a valid task number.");
+            throw new CapyException("capybara.Capybara tilts head… '" + raw + "' is not a valid task number.");
         }
     }
 
@@ -148,11 +158,11 @@ public class Parser {
             }
         } catch (Exception e) {
             if ("/from".equals(label)) {
-                throw new CapyException("Capybara can’t read the /from time. Try 'yyyy-MM-dd' or 'yyyy-MM-dd HH:mm'.");
+                throw new CapyException("capybara.Capybara can’t read the /from time. Try 'yyyy-MM-dd' or 'yyyy-MM-dd HH:mm'.");
             } else if ("/to".equals(label)) {
-                throw new CapyException("Capybara can’t read the /to time. Try 'yyyy-MM-dd' or 'yyyy-MM-dd HH:mm'.");
+                throw new CapyException("capybara.Capybara can’t read the /to time. Try 'yyyy-MM-dd' or 'yyyy-MM-dd HH:mm'.");
             } else {
-                throw new CapyException("Capybara can’t read that date 🐹🍊. Try 'yyyy-MM-dd' or 'yyyy-MM-dd HH:mm'.");
+                throw new CapyException("capybara.Capybara can’t read that date 🐹🍊. Try 'yyyy-MM-dd' or 'yyyy-MM-dd HH:mm'.");
             }
         }
     }

@@ -1,9 +1,11 @@
+package capybara;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Holds and manages the list of tasks.
- * Keeps helpers used by UI and Storage.
+ * Keeps helpers used by UI and capybara.Storage.
  */
 public class TaskList {
     private final ArrayList<Task> tasks;
@@ -13,7 +15,7 @@ public class TaskList {
         this.tasks = new ArrayList<Task>();
     }
 
-    /** Start with an initial list (e.g., from Storage.load()). */
+    /** Start with an initial list (e.g., from capybara.Storage.load()). */
     public TaskList(List<Task> initial) {
         if (initial == null) {
             this.tasks = new ArrayList<Task>();
@@ -48,8 +50,8 @@ public class TaskList {
     }
 
     /**
-     * Expose the underlying ArrayList for Storage.save(...).
-     * Prefer not to mutate the returned list outside of TaskList methods.
+     * Expose the underlying ArrayList for capybara.Storage.save(...).
+     * Prefer not to mutate the returned list outside of capybara.TaskList methods.
      */
     public ArrayList<Task> asArrayList() {
         return tasks;

@@ -1,4 +1,10 @@
-import java.io.*;
+package capybara;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -38,7 +44,7 @@ public class Storage {
      * an empty task list will be returned. Lines in the file that do not follow
      * the expected format will be skipped.
      *
-     * @return an {@code ArrayList<Task>} containing the tasks read from file
+     * @return an {@code ArrayList<capybara.Task>} containing the tasks read from file
      * @throws IOException if an I/O error occurs while creating or reading the file
      */
     public ArrayList<Task> load() throws IOException {
@@ -85,7 +91,7 @@ public class Storage {
                             // Fallback: date-only → midnight
                             by = LocalDate.parse(raw, DATE_FMT).atStartOfDay();
                         } catch (java.time.format.DateTimeParseException e2) {
-                            System.out.println("Capybara can’t read that date 🐹🍊. Try 'yyyy-MM-dd' or 'yyyy-MM-dd HH:mm'.");
+                            System.out.println("capybara.Capybara can’t read that date 🐹🍊. Try 'yyyy-MM-dd' or 'yyyy-MM-dd HH:mm'.");
                             return null;
                         }
                     }
@@ -105,7 +111,7 @@ public class Storage {
                         try {
                             from = LocalDate.parse(fromRaw, DATE_FMT).atStartOfDay();
                         } catch (java.time.format.DateTimeParseException e2) {
-                            System.out.println("Capybara can’t read the /from time. Try 'yyyy-MM-dd' or 'yyyy-MM-dd HH:mm'.");
+                            System.out.println("capybara.Capybara can’t read the /from time. Try 'yyyy-MM-dd' or 'yyyy-MM-dd HH:mm'.");
                             return null;
                         }
                     }
@@ -116,7 +122,7 @@ public class Storage {
                         try {
                             to = LocalDate.parse(toRaw, DATE_FMT).atStartOfDay();
                         } catch (java.time.format.DateTimeParseException e2) {
-                            System.out.println("Capybara can’t read the /to time. Try 'yyyy-MM-dd' or 'yyyy-MM-dd HH:mm'.");
+                            System.out.println("capybara.Capybara can’t read the /to time. Try 'yyyy-MM-dd' or 'yyyy-MM-dd HH:mm'.");
                             return null;
                         }
                     }
