@@ -32,8 +32,9 @@ application {
 }
 
 shadowJar {
-    archiveBaseName = "duke"
+    archiveBaseName = "Capybara"
     archiveClassifier = null
+    destinationDirectory = file("$rootDir")   // put JAR in project root
 }
 
 run{

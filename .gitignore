@@ -20,3 +20,6 @@ text-ui-test/EXPECTED-UNIX.TXT
 *.txt
 data/taskStorage.txt
 
+# Ignore generated jar files
+*.jar
+
