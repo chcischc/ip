@@ -32,7 +32,7 @@ public class Capybara {
                 c.execute(tasks, ui, storage);
                 isExit = c.isExit();
             } catch (CapyException e) {
-                ui.showError(e.getMessage());                // prints your detailed messages
+                ui.showError(e.getMessage());
             } catch (java.io.IOException io) {
                 ui.showError("capybara.Capybara slipped… couldn’t save tasks to disk.");
             } finally {
