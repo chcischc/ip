@@ -12,10 +12,21 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Parses raw user input strings into Command objects.
+ * Performs validation and throws Capybara-specific exceptions for invalid input.
+ */
 public class Parser {
     private static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final DateTimeFormatter DATE_TIME = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
+    /**
+     * Parses the given input string and returns a corresponding Command.
+     *
+     * @param input Full raw input string entered by the user.
+     * @return Concrete Command representing the user’s intent.
+     * @throws CapyException If the command is unknown or malformed.
+     */
     public static Command parse(String input) throws CapyException {
         if (input == null || input.isBlank()) {
             throw new UnknownCommandException("");

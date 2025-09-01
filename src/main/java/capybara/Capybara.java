@@ -2,11 +2,21 @@ package capybara;
 
 import capybara.command.Command;
 
+/**
+ * Entry point of the Capybara application.
+ * Coordinates initialization of UI, storage, and task list, and
+ * runs the main command loop until the user exits.
+ */
 public class Capybara {
     private final Storage storage;
     private final TaskList tasks;
     private final Ui ui;
 
+    /**
+     * Constructs a new Capybara instance with the given storage file path.
+     *
+     * @param filePath Path to the storage file where tasks are saved.
+     */
     public Capybara(String filePath) {
         this.ui = new Ui();
         this.storage = new Storage(filePath);
@@ -21,6 +31,10 @@ public class Capybara {
         this.tasks = loaded;
     }
 
+    /**
+     * Runs the Capybara application.
+     * Reads user commands, executes them, and prints results until exit.
+     */
     public void run() {
         ui.showWelcome();
         boolean isExit = false;
@@ -42,6 +56,11 @@ public class Capybara {
         ui.close();
     }
 
+    /**
+     * Main method for launching the application from the command line.
+     *
+     * @param args Command line arguments (unused).
+     */
     public static void main(String[] args) {
         new Capybara("Data/taskStorage.txt").run();
     }

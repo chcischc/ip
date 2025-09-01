@@ -4,18 +4,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Holds and manages the list of tasks.
- * Keeps helpers used by UI and capybara.Storage.
+ * Manages a dynamic list of tasks.
+ * Provides operations to add, remove, retrieve, and format tasks.
  */
 public class TaskList {
     private final ArrayList<Task> tasks;
 
-    /** Start with an empty list. */
+    /**
+     * Creates an empty task list.
+     */
     public TaskList() {
         this.tasks = new ArrayList<Task>();
     }
 
-    /** Start with an initial list (e.g., from capybara.Storage.load()). */
+    /**
+     * Creates a task list initialized with the given tasks.
+     *
+     * @param initial List of tasks to populate the task list with.
+     */
     public TaskList(List<Task> initial) {
         if (initial == null) {
             this.tasks = new ArrayList<Task>();
@@ -24,42 +30,69 @@ public class TaskList {
         }
     }
 
-    /** Add a task to the end of the list. */
+    /**
+     * Adds a new task to the task list.
+     *
+     * @param t Task to be added.
+     */
     public void add(Task t) {
         tasks.add(t);
     }
 
-    /** Get the task at zero-based index. */
+    /**
+     * Returns the task at the specified index.
+     *
+     * @param index Zero-based index of the task.
+     * @return Task at the given index.
+     */
     public Task get(int index) {
         return tasks.get(index);
     }
 
-    /** Remove and return the task at zero-based index. */
+    /**
+     * Removes and returns the task at the specified index.
+     *
+     * @param index Zero-based index of the task.
+     * @return Removed task.
+     */
     public Task remove(int index) {
         return tasks.remove(index);
     }
 
-    /** Number of tasks. */
+    /**
+     * Returns the number of tasks in the task list.
+     *
+     * @return Number of tasks.
+     */
     public int size() {
         return tasks.size();
     }
 
-    /** Whether the list is empty. */
+    /**
+     * Checks if the task list is empty.
+     *
+     * @return True if there are no tasks, false otherwise.
+     */
     public boolean isEmpty() {
         return tasks.isEmpty();
     }
 
     /**
-     * Expose the underlying ArrayList for capybara.Storage.save(...).
-     * Prefer not to mutate the returned list outside of capybara.TaskList methods.
+     * Returns the underlying task list as a mutable {@link ArrayList}.
+     * This method is provided to support {@code capybara.Storage.save(...)}.
+     * Clients should avoid mutating the returned list directly, and instead
+     * use {@link TaskList} methods to preserve invariants.
+     *
+     * @return Underlying {@code ArrayList<Task>} representing all tasks.
      */
     public ArrayList<Task> asArrayList() {
         return tasks;
     }
 
     /**
-     * Returns the exact listing text your UI expects.
-     * If empty, returns a friendly message instead of a blank list.
+     * Formats all tasks into a numbered string suitable for display.
+     *
+     * @return Formatted string containing all tasks.
      */
     public String formatAll() {
         if (tasks.isEmpty()) {
