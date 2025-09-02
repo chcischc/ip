@@ -1,7 +1,7 @@
 package capybara;
 
 public class EmptyTimeException extends CapyException {
-    EmptyTimeException(String kind) {
+    public EmptyTimeException(String kind) {
         super(buildMessage(kind));
     }
 
