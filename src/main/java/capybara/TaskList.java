@@ -30,6 +30,19 @@ public class TaskList {
         }
     }
 
+    public TaskList getFilteredTaskList(String keyword) {
+        if (isEmpty()) {
+            return new TaskList();
+        }
+        TaskList filtered = new TaskList();
+        for (Task task : tasks) {
+            if (task.getDescription().contains(keyword)) {
+                filtered.add(task);
+            }
+        }
+        return filtered;
+    }
+
     /**
      * Adds a new task to the task list.
      *

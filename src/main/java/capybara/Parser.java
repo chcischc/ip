@@ -6,6 +6,7 @@ import capybara.command.AddToDoCommand;
 import capybara.command.ByeCommand;
 import capybara.command.Command;
 import capybara.command.DeleteCommand;
+import capybara.command.FindCommand;
 import capybara.command.ListCommand;
 import capybara.command.MarkCommand;
 import java.time.LocalDate;
@@ -59,7 +60,10 @@ public class Parser {
             return parseMark(args, false);
         } else if (head.equals("delete")) {
             return parseDelete(args);
+        } else if (head.equals("find")) {
+            return parseFind(args);
         } else {
+            System.out.println("Unknown command: " + head);
             throw new UnknownCommandException(head);
         }
     }
@@ -129,6 +133,13 @@ public class Parser {
         LocalDateTime from = parseDateOrDateTime(fromRaw, "/from");
         LocalDateTime to = parseDateOrDateTime(toRaw, "/to");
         return new AddEventCommand(desc, from, to);
+    }
+
+    private static Command parseFind(String args) throws CapyException {
+        if (args.isBlank()) {
+            throw new EmptyDescriptionException("find");
+        }
+        return new FindCommand(args);
     }
 
     private static Command parseMark(String args, boolean mark) throws CapyException {
