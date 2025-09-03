@@ -30,6 +30,11 @@ public class TaskList {
         }
     }
 
+    /**
+     * Return a new task list by filtering tasks that contain the given keyword.
+     *
+     * @param keyword String to check if a task contains.
+     */
     public TaskList getFilteredTaskList(String keyword) {
         if (isEmpty()) {
             return new TaskList();
