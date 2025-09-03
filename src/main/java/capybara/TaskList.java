@@ -31,9 +31,16 @@ public class TaskList {
     }
 
     /**
-     * Return a new task list by filtering tasks that contain the given keyword.
+     * Returns a filtered view of this task list containing only tasks
+     * whose description matches the given keyword.
+     * <p>
+     * The search is typically case-insensitive (depending on implementation)
+     * and checks whether the keyword is contained within the task description.
+     * A new {@code TaskList} instance is returned; the original list is unchanged.
      *
-     * @param keyword String to check if a task contains.
+     * @param keyword the keyword to search for within task descriptions
+     * @return a new {@code TaskList} containing only the matching tasks;
+     *         may be empty if no tasks match
      */
     public TaskList getFilteredTaskList(String keyword) {
         if (isEmpty()) {
