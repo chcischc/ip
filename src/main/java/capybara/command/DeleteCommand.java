@@ -48,7 +48,7 @@ public class DeleteCommand extends Command {
             storage.save(tasks.asArrayList());
         } catch (IndexOutOfBoundsException oob) {
             int oneBased = index0 + 1;
-            throw new CapyException("capybara.Capybara can’t find task number " + oneBased + " in the list.");
+            throw new CapyException("Capybara can’t find task number " + oneBased + " in the list.");
         }
     }
 }

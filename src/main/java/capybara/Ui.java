@@ -77,7 +77,7 @@ public class Ui {
      * @param msg Error message to display.
      */
     public void showError(String msg) {
-        println("☹ OOPS!!! " + msg);
+        println(msg);
     }
 
     /**

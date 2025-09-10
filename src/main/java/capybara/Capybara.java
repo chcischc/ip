@@ -11,6 +11,7 @@ public class Capybara {
     private final Storage storage;
     private final TaskList tasks;
     private final Ui ui;
+    private boolean lastExit = false;
 
     /**
      * Constructs a new Capybara instance with the given storage file path.
@@ -54,6 +55,30 @@ public class Capybara {
             }
         }
         ui.close();
+    }
+
+    public String getResponse(String input) {
+        BufferingUi bui = new BufferingUi();
+        try {
+            capybara.command.Command c = Parser.parse(input);
+            lastExit = c.isExit();            // ByeCommand returns true here
+            c.execute(tasks, bui, storage);   // prints goodbye via ui.showGoodbye()
+        } catch (CapyException e) {
+            bui.showError(e.getMessage());
+        } catch (java.io.IOException io) {
+            bui.showError("Capybara slipped… couldn’t save tasks to disk.");
+        }
+        return bui.flush();
+    }
+
+    public String getWelcome() {
+        BufferingUi u = new BufferingUi();
+        u.showWelcome();          // uses Ui.showWelcome(), which calls println(...) -> buffered
+        return u.flush();
+    }
+
+    public boolean lastWasExit() {
+        return lastExit;
     }
 
     /**
