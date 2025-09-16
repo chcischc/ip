@@ -162,7 +162,10 @@ public class Parser {
             if (n <= 0) {
                 throw new NumberFormatException();
             }
-            return n - 1;
+            int idx0 = n - 1;
+            // ASSERT: caller relies on a zero-based, non-negative index
+            assert idx0 >= 0 : "Zero-based index must be non-negative";
+            return idx0;
         } catch (NumberFormatException e) {
             throw new CapyException("Capybara tilts head… '" + raw + "' is not a valid task number.");
         }
