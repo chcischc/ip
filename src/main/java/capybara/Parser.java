@@ -12,6 +12,7 @@ import capybara.command.MarkCommand;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 
 /**
  * Parses raw user input strings into Command objects.
@@ -20,6 +21,30 @@ import java.time.format.DateTimeFormatter;
 public class Parser {
     private static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final DateTimeFormatter DATE_TIME = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    private static final HashMap<String, String> BUILTIN_ALIASES;
+    static {
+        HashMap<String, String> m = new HashMap<String, String>();
+        // canonical → short forms
+        m.put("t", "todo");
+        m.put("d", "deadline");
+        m.put("e", "event");
+        m.put("l", "list");
+        m.put("m", "mark");
+        m.put("u", "unmark");
+        m.put("del", "delete");
+        m.put("q", "bye");
+        BUILTIN_ALIASES = m;
+    }
+
+    private static String normalizeHead(String head) {
+        String lower = head.toLowerCase();
+        String mapped = BUILTIN_ALIASES.get(lower);
+        if (mapped != null) {
+            return mapped;
+        } else {
+            return lower;
+        }
+    }
 
     /**
      * Parses the given input string and returns a corresponding Command.
@@ -35,7 +60,7 @@ public class Parser {
 
         String trimmed = input.trim();
         String[] parts = trimmed.split("\\s+", 2);
-        String head = parts[0].toLowerCase();
+        String head = normalizeHead(parts[0]);
         String args;
 
         if (parts.length > 1) {
