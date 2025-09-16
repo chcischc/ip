@@ -81,11 +81,6 @@ public class Capybara {
         return lastExit;
     }
 
-    /**
-     * Main method for launching the application from the command line.
-     *
-     * @param args Command line arguments (unused).
-     */
     public static void main(String[] args) {
         new Capybara("Data/taskStorage.txt").run();
     }

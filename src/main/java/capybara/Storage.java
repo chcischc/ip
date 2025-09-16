@@ -9,7 +9,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-
 public class Storage {
     private final String filePath;
 
@@ -55,86 +54,131 @@ public class Storage {
 
         ArrayList<Task> tasks = new ArrayList<>();
         File file = new File(filePath);
+
         if (!file.exists()) {
             file.getParentFile().mkdirs();
             file.createNewFile();
             return tasks;
         }
-        BufferedReader br = new BufferedReader(new FileReader(file));
-        String line;
-        while ((line = br.readLine()) != null) {
-            line = line.trim();
-            if (line.isEmpty()) {
-                continue;
-            }
-            String[] parts = line.split(" \\| ");
-            String type = parts[0];
-            Boolean isDone = (Integer.parseInt(parts[1]) == 1) ? true : false;
-            String description = parts[2];
 
-            switch (type) {
-                case "T":
-                    ToDo t = new ToDo(description);
-                    if (isDone) {
-                        t.markAsDone();
-                    }
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String trimmed = line.trim();
+                if (trimmed.isEmpty()) {
+                    continue;
+                }
+
+                String[] parts = trimmed.split(" \\| ");
+                String type = parts[0];
+                boolean isDone = (Integer.parseInt(parts[1]) == 1);
+                String description = parts[2];
+
+                switch (type) {
+                case "T": {
+                    Task t = buildToDo(description, isDone);
                     tasks.add(t);
                     break;
-                case "D":
-                    String raw = parts[3];
-                    LocalDateTime by;
-                    try {
-                        // Try full date-time first
-                        by = LocalDateTime.parse(raw, DATETIME_FMT);
-                    } catch (java.time.format.DateTimeParseException e1) {
-                        try {
-                            // Fallback: date-only → midnight
-                            by = LocalDate.parse(raw, DATE_FMT).atStartOfDay();
-                        } catch (java.time.format.DateTimeParseException e2) {
-                            System.out.println("capybara.Capybara can’t read that date 🐹🍊. Try 'yyyy-MM-dd' or 'yyyy-MM-dd HH:mm'.");
-                            return null;
-                        }
-                    }
-                    Deadline d = new Deadline(description, by);
-                    if (isDone) {
-                        d.markAsDone();
+                }
+                case "D": {
+                    Task d = parseDeadline(parts[3], description, isDone, DATE_FMT, DATETIME_FMT);
+                    if (d == null) {
+                        return null; // keep original early-null behavior on bad date
                     }
                     tasks.add(d);
                     break;
-                case "E":
-                    String fromRaw = parts[3];
-                    String toRaw = parts[4];
-                    LocalDateTime from, to;
-                    try {
-                        from = LocalDateTime.parse(fromRaw, DATETIME_FMT);
-                    } catch (java.time.format.DateTimeParseException e1) {
-                        try {
-                            from = LocalDate.parse(fromRaw, DATE_FMT).atStartOfDay();
-                        } catch (java.time.format.DateTimeParseException e2) {
-                            System.out.println("capybara.Capybara can’t read the /from time. Try 'yyyy-MM-dd' or 'yyyy-MM-dd HH:mm'.");
-                            return null;
-                        }
-                    }
-
-                    try {
-                        to = LocalDateTime.parse(toRaw, DATETIME_FMT);
-                    } catch (java.time.format.DateTimeParseException e1) {
-                        try {
-                            to = LocalDate.parse(toRaw, DATE_FMT).atStartOfDay();
-                        } catch (java.time.format.DateTimeParseException e2) {
-                            System.out.println("capybara.Capybara can’t read the /to time. Try 'yyyy-MM-dd' or 'yyyy-MM-dd HH:mm'.");
-                            return null;
-                        }
-                    }
-                    Event e = new Event(description, from, to);
-                    if (isDone) {
-                        e.markAsDone();
+                }
+                case "E": {
+                    Task e = parseEvent(parts[3], parts[4], description, isDone, DATE_FMT, DATETIME_FMT);
+                    if (e == null) {
+                        return null; // keep original early-null behavior on bad from/to
                     }
                     tasks.add(e);
                     break;
+                }
+                default:
+                    // Unknown record type: do nothing (effectively skip line), same net behavior
+                    break;
+                }
             }
         }
-        br.close();
+
         return tasks;
+    }
+
+
+    // helpers
+
+    private static Task buildToDo(String description, boolean isDone) {
+        ToDo t = new ToDo(description);
+        if (isDone) {
+            t.markAsDone();
+        }
+        return t;
+    }
+
+    private static Task parseDeadline(
+            String rawBy,
+            String description,
+            boolean isDone,
+            java.time.format.DateTimeFormatter DATE_FMT,
+            java.time.format.DateTimeFormatter DATETIME_FMT) {
+
+        LocalDateTime by;
+        try {
+            by = LocalDateTime.parse(rawBy, DATETIME_FMT);
+        } catch (java.time.format.DateTimeParseException e1) {
+            try {
+                by = LocalDate.parse(rawBy, DATE_FMT).atStartOfDay();
+            } catch (java.time.format.DateTimeParseException e2) {
+                System.out.println("capybara.Capybara can’t read that date 🐹🍊. Try 'yyyy-MM-dd' or 'yyyy-MM-dd HH:mm'.");
+                return null; // same as original
+            }
+        }
+
+        Deadline d = new Deadline(description, by);
+        if (isDone) {
+            d.markAsDone();
+        }
+        return d;
+    }
+
+    private static Task parseEvent(
+            String fromRaw,
+            String toRaw,
+            String description,
+            boolean isDone,
+            java.time.format.DateTimeFormatter DATE_FMT,
+            java.time.format.DateTimeFormatter DATETIME_FMT) {
+
+        LocalDateTime from, to;
+
+        try {
+            from = LocalDateTime.parse(fromRaw, DATETIME_FMT);
+        } catch (java.time.format.DateTimeParseException e1) {
+            try {
+                from = LocalDate.parse(fromRaw, DATE_FMT).atStartOfDay();
+            } catch (java.time.format.DateTimeParseException e2) {
+                System.out.println("capybara.Capybara can’t read the /from time. Try 'yyyy-MM-dd' or 'yyyy-MM-dd HH:mm'.");
+                return null;
+            }
+        }
+
+        try {
+            to = LocalDateTime.parse(toRaw, DATETIME_FMT);
+        } catch (java.time.format.DateTimeParseException e1) {
+            try {
+                to = LocalDate.parse(toRaw, DATE_FMT).atStartOfDay();
+            } catch (java.time.format.DateTimeParseException e2) {
+                System.out.println("capybara.Capybara can’t read the /to time. Try 'yyyy-MM-dd' or 'yyyy-MM-dd HH:mm'.");
+                return null;
+            }
+        }
+
+        Event e = new Event(description, from, to);
+        if (isDone) {
+            e.markAsDone();
+        }
+        return e;
     }
 }

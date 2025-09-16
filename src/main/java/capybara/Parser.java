@@ -92,13 +92,13 @@ public class Parser {
         }
 
         String[] split = args.split("\\s*/by\\s+", 2);
-        boolean missingBy = split.length < 2;
-        boolean emptyDesc = !missingBy && split[0].trim().isEmpty();
-        boolean emptyTime = !missingBy && split[1].trim().isEmpty();
+        boolean isMissingBy = split.length < 2;
+        boolean isEmptyDesc = !isMissingBy && split[0].trim().isEmpty();
+        boolean isEmptyTime = !isMissingBy && split[1].trim().isEmpty();
 
-        if (missingBy || emptyTime) {
+        if (isMissingBy || isEmptyTime) {
             throw new EmptyTimeException("deadline");
-        } else if (emptyDesc) {
+        } else if (isEmptyDesc) {
             throw new EmptyDescriptionException("deadline");
         }
 
@@ -114,9 +114,9 @@ public class Parser {
         }
 
         String[] splitByFrom = args.split("\\s*/from\\s+", 2);
-        boolean missingFrom = splitByFrom.length < 2;
+        boolean isMissingFrom = splitByFrom.length < 2;
 
-        if (missingFrom) {
+        if (isMissingFrom) {
             throw new EmptyTimeException("event");
         }
 
@@ -128,9 +128,9 @@ public class Parser {
 
         String remainder = splitByFrom[1];
         String[] splitByTo = remainder.split("\\s*/to\\s+", 2);
-        boolean missingTo = splitByTo.length < 2;
+        boolean isMissingTo = splitByTo.length < 2;
 
-        if (missingTo) {
+        if (isMissingTo) {
             throw new EmptyTimeException("event");
         }
 
