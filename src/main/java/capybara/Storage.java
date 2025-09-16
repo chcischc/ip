@@ -106,7 +106,6 @@ public class Storage {
         return tasks;
     }
 
-
     // helpers
 
     private static Task buildToDo(String description, boolean isDone) {
