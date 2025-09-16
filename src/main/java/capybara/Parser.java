@@ -44,27 +44,38 @@ public class Parser {
             args = "";
         }
 
-        if (head.equals("bye")) {
+        switch (head) {
+        case "bye" -> {
             return new ByeCommand();
-        } else if (head.equals("list")) {
+        }
+        case "list" -> {
             return new ListCommand();
-        } else if (head.equals("todo")) {
+        }
+        case "todo" -> {
             return parseToDo(args);
-        } else if (head.equals("deadline")) {
+        }
+        case "deadline" -> {
             return parseDeadline(args);
-        } else if (head.equals("event")) {
+        }
+        case "event" -> {
             return parseEvent(args);
-        } else if (head.equals("mark")) {
+        }
+        case "mark" -> {
             return parseMark(args, true);
-        } else if (head.equals("unmark")) {
+        }
+        case "unmark" -> {
             return parseMark(args, false);
-        } else if (head.equals("delete")) {
+        }
+        case "delete" -> {
             return parseDelete(args);
-        } else if (head.equals("find")) {
+        }
+        case "find" -> {
             return parseFind(args);
-        } else {
+        }
+        default -> {
             System.out.println("Unknown command: " + head);
             throw new UnknownCommandException(head);
+        }
         }
     }
 
@@ -81,13 +92,13 @@ public class Parser {
         }
 
         String[] split = args.split("\\s*/by\\s+", 2);
-        boolean missingBy = split.length < 2;
-        boolean emptyDesc = !missingBy && split[0].trim().isEmpty();
-        boolean emptyTime = !missingBy && split[1].trim().isEmpty();
+        boolean isMissingBy = split.length < 2;
+        boolean isEmptyDesc = !isMissingBy && split[0].trim().isEmpty();
+        boolean isEmptyTime = !isMissingBy && split[1].trim().isEmpty();
 
-        if (missingBy || emptyTime) {
+        if (isMissingBy || isEmptyTime) {
             throw new EmptyTimeException("deadline");
-        } else if (emptyDesc) {
+        } else if (isEmptyDesc) {
             throw new EmptyDescriptionException("deadline");
         }
 
