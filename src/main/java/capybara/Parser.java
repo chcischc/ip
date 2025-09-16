@@ -114,9 +114,9 @@ public class Parser {
         }
 
         String[] splitByFrom = args.split("\\s*/from\\s+", 2);
-        boolean missingFrom = splitByFrom.length < 2;
+        boolean isMissingFrom = splitByFrom.length < 2;
 
-        if (missingFrom) {
+        if (isMissingFrom) {
             throw new EmptyTimeException("event");
         }
 
@@ -128,9 +128,9 @@ public class Parser {
 
         String remainder = splitByFrom[1];
         String[] splitByTo = remainder.split("\\s*/to\\s+", 2);
-        boolean missingTo = splitByTo.length < 2;
+        boolean isMissingTo = splitByTo.length < 2;
 
-        if (missingTo) {
+        if (isMissingTo) {
             throw new EmptyTimeException("event");
         }
 
