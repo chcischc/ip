@@ -1,6 +1,27 @@
 package capybara;
 
+/**
+ * Signals that a command requiring a time component was given without one.
+ *
+ * This exception is thrown when the user enters a command such as
+ * {@code deadline} or {@code event} but omits the required date or
+ * time arguments. It generates a context-specific error message
+ * guiding the user on the correct format to use.
+ *
+ * Examples:
+ * - {@code deadline} without a {@code /by} date/time.
+ * - {@code event} without both {@code /from} and {@code /to} times.
+ *
+ * For unsupported cases, a generic fallback message is provided.
+ */
 public class EmptyTimeException extends CapyException {
+
+    /**
+     * Creates an exception indicating a missing time component
+     * for the specified command type.
+     *
+     * @param kind The command type (e.g., "deadline", "event").
+     */
     public EmptyTimeException(String kind) {
         super(buildMessage(kind));
     }
