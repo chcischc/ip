@@ -54,53 +54,58 @@ public class Parser {
      * @throws CapyException If the command is unknown or malformed.
      */
     public static Command parse(String input) throws CapyException {
+        /*
+         * [AI-ASSISTED] Refactor note — Parser.parse()
+         *
+         * Tool: ChatGPT (2025-09-19, Asia/Singapore).
+         * Goal: keep parse() under 30 lines by extracting helpers while
+         * preserving observable behavior.
+         *
+         * Changes:
+         * - Introduced splitHeadArgs(...), argOrEmpty(...), and dispatch(...)
+         * - Added assertions to document invariants (non-blank head, non-null args)
+         *
+         * Behavior preserved:
+         * - Unknown-command println + exception
+         * - Args default to empty string when absent
+         */
+
         if (input == null || input.isBlank()) {
             throw new UnknownCommandException("");
         }
-
-        String trimmed = input.trim();
-        String[] parts = trimmed.split("\\s+", 2);
+        String[] parts = splitHeadArgs(input);
         String head = normalizeHead(parts[0]);
-        String args;
+        String args = argOrEmpty(parts);
 
-        if (parts.length > 1) {
-            args = parts[1].trim();
-        } else {
-            args = "";
-        }
+        // Assertions document programmer contracts
+        assert head != null && !head.isBlank() : "Command word must not be blank";
+        assert args != null : "Args should never be null";
 
+        return dispatch(head, args);
+    }
+
+    private static String[] splitHeadArgs(String input) {
+        return input.trim().split("\\s+", 2);
+    }
+
+    private static String argOrEmpty(String[] parts) {
+        return parts.length > 1 ? parts[1].trim() : "";
+    }
+
+    private static Command dispatch(String head, String args) throws CapyException {
         switch (head) {
-        case "bye" -> {
-            return new ByeCommand();
-        }
-        case "list" -> {
-            return new ListCommand();
-        }
-        case "todo" -> {
-            return parseToDo(args);
-        }
-        case "deadline" -> {
-            return parseDeadline(args);
-        }
-        case "event" -> {
-            return parseEvent(args);
-        }
-        case "mark" -> {
-            return parseMark(args, true);
-        }
-        case "unmark" -> {
-            return parseMark(args, false);
-        }
-        case "delete" -> {
-            return parseDelete(args);
-        }
-        case "find" -> {
-            return parseFind(args);
-        }
-        default -> {
+        case "bye":     return new ByeCommand();
+        case "list":    return new ListCommand();
+        case "todo":    return parseToDo(args);
+        case "deadline":return parseDeadline(args);
+        case "event":   return parseEvent(args);
+        case "mark":    return parseMark(args, true);
+        case "unmark":  return parseMark(args, false);
+        case "delete":  return parseDelete(args);
+        case "find":    return parseFind(args);
+        default:
             System.out.println("Unknown command: " + head);
             throw new UnknownCommandException(head);
-        }
         }
     }
 
