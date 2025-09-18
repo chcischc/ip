@@ -9,6 +9,24 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+/**
+ * Provides persistent storage for Capybara tasks.
+ *
+ * The Storage class is responsible for saving tasks to a file
+ * and loading tasks back from it. Tasks are serialized in a
+ * text-based format defined by each task's {@code toFileString()}
+ * representation. The class ensures that the storage file and its
+ * parent directory are created if they do not already exist.
+ *
+ * The loading process recreates task objects from the file content.
+ * If the file contains invalid data, the method will either skip
+ * those lines or, in the case of malformed date/time fields,
+ * terminate early by returning {@code null}, consistent with the
+ * legacy behavior of the application.
+ *
+ * This class is central to maintaining task persistence across
+ * multiple runs of the chatbot application.
+ */
 public class Storage {
     private final String filePath;
 

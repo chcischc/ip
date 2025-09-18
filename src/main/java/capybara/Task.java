@@ -4,6 +4,22 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Represents a generic task in the Capybara application.
+ *
+ * A Task stores a textual description and a completion status
+ * (done or not done). It also provides utilities for formatting
+ * date/time values for display to the user and for saving to the
+ * persistent storage file.
+ *
+ * Subclasses such as {@code ToDo}, {@code Deadline}, and
+ * {@code Event} extend this class to include additional fields
+ * such as due dates or event time ranges.
+ *
+ * This class defines the base behavior for marking tasks as done,
+ * marking them as not done, and serializing them into a string
+ * representation for both display and file storage.
+ */
 public class Task {
     protected static final DateTimeFormatter DATE_FMT =
             DateTimeFormatter.ofPattern("MMM d yyyy");
