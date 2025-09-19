@@ -33,10 +33,20 @@ public class Task {
     private final String description;
     private boolean isDone = false;
 
+    /**
+     * Creates a new task with the given description.
+     *
+     * @param description Description of the task.
+     */
     Task(String description) {
         this.description = description;
     }
 
+    /**
+     * Returns whether this task has been marked as done.
+     *
+     * @return {@code true} if the task is done, {@code false} otherwise.
+     */
     public boolean isDone() {
         return isDone;
     }
@@ -48,10 +58,19 @@ public class Task {
     public void markAsDone() {
         isDone = true;
     }
+
     public void markAsNotDone() {
         isDone = false;
     }
 
+    /**
+     * Returns a string representation of the given date/time for display.
+     * Dates at midnight are shown as a date only; otherwise both date and
+     * time are shown.
+     *
+     * @param dt The date/time to format.
+     * @return A formatted string, or an empty string if {@code dt} is null.
+     */
     protected static String formatForPrint(LocalDateTime dt) {
         if (dt == null) return ""; // defensive
         return dt.toLocalTime().equals(LocalTime.MIDNIGHT)
@@ -59,6 +78,14 @@ public class Task {
                 : dt.format(DATE_TIME_FMT);
     }
 
+    /**
+     * Returns a string representation of the given date/time for saving.
+     * Dates at midnight are saved as date only; otherwise both date and
+     * time are saved.
+     *
+     * @param dt The date/time to format.
+     * @return A formatted string, or an empty string if {@code dt} is null.
+     */
     protected static String formatForSave(java.time.LocalDateTime dt) {
         if (dt == null) return "";
         return dt.toLocalTime().equals(java.time.LocalTime.MIDNIGHT)
@@ -66,11 +93,25 @@ public class Task {
                 : dt.format(SAVE_DATE_TIME);               // date + time
     }
 
+    /**
+     * Returns a string representation of this task suitable for saving
+     * to the storage file. The format includes the completion status
+     * and description.
+     *
+     * @return Encoded string for storage.
+     */
     public String toFileString() {
         String isDoneMark = (isDone ? "1" : "0");
         return " | " + isDoneMark + " | " + description;
     }
 
+    /**
+     * Returns a string representation of this task for display to the user.
+     * The format includes a checkmark if done, or a blank box if not done,
+     * followed by the description.
+     *
+     * @return Human-readable string of the task.
+     */
     @Override
     public String toString() {
         return (isDone ? "[X] " + description : "[ ] " + description);

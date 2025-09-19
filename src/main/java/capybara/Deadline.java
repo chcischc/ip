@@ -24,11 +24,25 @@ public class Deadline extends Task {
         this.by = by;
     }
 
+    /**
+     * Returns a string representation of the deadline suitable for saving
+     * to the storage file. The format includes the deadline marker "D",
+     * completion status, description, and the due date/time.
+     *
+     * @return Encoded string for storage.
+     */
     @Override
     public String toFileString() {
         return "D | " + (isDone() ? "1" : "0") + " | " + getDescription() + " | " + formatForSave(by);
     }
 
+    /**
+     * Returns a string representation of the deadline for display to the user.
+     * The format includes the deadline marker "[D]", description, and the
+     * due date/time formatted for readability.
+     *
+     * @return Human-readable string of the deadline.
+     */
     @Override
     public String toString() {
         return "[D]" + super.toString() + " (by: " + formatForPrint(by) + ")";
