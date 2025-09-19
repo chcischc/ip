@@ -127,6 +127,8 @@ public class Storage {
             java.time.format.DateTimeFormatter DATETIME_FMT) {
 
         String[] parts = line.split(" \\| ");
+        // ASSERT: serialized line must contain at least type, done flag, and description
+        assert parts.length >= 3 : "Malformed record: " + line;
         String type = parts[0];
         boolean isDone = (Integer.parseInt(parts[1]) == 1);
         String description = parts[2];
