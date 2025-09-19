@@ -50,11 +50,9 @@ public class Ui {
      * Shows the welcome message and logo.
      */
     public void showWelcome() {
-        println(LINE);
         println(LOGO);
         println(" Hello! I'm capybara.Capybara");
         println(" What can I do for you... Zzzzz");
-        println(LINE);
     }
 
     /**
