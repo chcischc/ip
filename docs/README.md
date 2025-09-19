@@ -11,7 +11,7 @@ It helps you keep track of tasks, deadlines, and events — all from a simple ch
 2. Download the latest `capybara.jar`.  
 3. Run the application with:  
    ```bash
-   java -jar capybara.jar
+   java -jar Capybara.jar
    ```  
 4. A GUI window will appear. Type your commands into the input box and press **Enter**.  
 
