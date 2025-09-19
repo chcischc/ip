@@ -20,4 +20,5 @@ text-ui-test/EXPECTED-UNIX.TXT
 *.txt
 data/taskStorage.txt
 
-
+# Ignore all .jar files
+*.jar
